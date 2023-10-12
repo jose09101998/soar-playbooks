@@ -1,0 +1,127 @@
+{
+    "blockly": false,
+    "blockly_xml": "<xml></xml>",
+    "category": "Uncategorized",
+    "coa": {
+        "data": {
+            "description": "",
+            "edges": [
+                {
+                    "id": "port_0_to_port_5",
+                    "sourceNode": "0",
+                    "sourcePort": "0_out",
+                    "targetNode": "5",
+                    "targetPort": "5_in"
+                },
+                {
+                    "id": "port_5_to_port_6",
+                    "sourceNode": "5",
+                    "sourcePort": "5_out",
+                    "targetNode": "6",
+                    "targetPort": "6_in"
+                },
+                {
+                    "id": "port_6_to_port_1",
+                    "sourceNode": "6",
+                    "sourcePort": "6_out",
+                    "targetNode": "1",
+                    "targetPort": "1_in"
+                }
+            ],
+            "hash": "5b24c440adb598ae27a18e8461c3a244ae17fbe1",
+            "nodes": {
+                "0": {
+                    "data": {
+                        "advanced": {
+                            "join": []
+                        },
+                        "functionName": "on_start",
+                        "id": "0",
+                        "type": "start"
+                    },
+                    "errors": {},
+                    "id": "0",
+                    "type": "start",
+                    "warnings": {},
+                    "x": 520,
+                    "y": 439.99999999999966
+                },
+                "1": {
+                    "data": {
+                        "advanced": {
+                            "join": []
+                        },
+                        "functionName": "on_finish",
+                        "id": "1",
+                        "type": "end"
+                    },
+                    "errors": {},
+                    "id": "1",
+                    "type": "end",
+                    "warnings": {},
+                    "x": 1600,
+                    "y": 479.99999999999966
+                },
+                "5": {
+                    "data": {
+                        "advanced": {
+                            "customName": "add artifact to close it",
+                            "customNameId": 0,
+                            "join": []
+                        },
+                        "functionId": 3,
+                        "functionName": "add_artifact_to_close_it",
+                        "id": "5",
+                        "inputParameters": [],
+                        "outputVariables": [],
+                        "type": "code"
+                    },
+                    "errors": {},
+                    "id": "5",
+                    "type": "code",
+                    "userCode": "\n    # Write your custom code here...\n    \n    cef_data = {\n        'close': \"the SNOW ticket has been closed\"\n    }\n    \n    phantom.add_artifact(\n        cef_data=cef_data, label='automation', name='close',\n        run_automation=False, severity='low'\n    )\n\n",
+                    "warnings": {},
+                    "x": 520,
+                    "y": 580
+                },
+                "6": {
+                    "data": {
+                        "advanced": {
+                            "customName": "find the container ids to delete",
+                            "customNameId": 0,
+                            "join": []
+                        },
+                        "functionId": 1,
+                        "functionName": "find_the_container_ids_to_delete",
+                        "id": "6",
+                        "inputParameters": [],
+                        "outputVariables": [
+                            "to_close"
+                        ],
+                        "type": "code"
+                    },
+                    "errors": {},
+                    "id": "6",
+                    "type": "code",
+                    "userCode": "\n    # Write your custom code here...\n    \n    base_url = phantom.get_rest_base_url()\n    phantom.debug(base_url)\n    \n    filtered_artifacts_url = f'{base_url}artifact?_filter_cef__close__isnull=False&page_size=0'\n    \n    response = phantom.requests.get(filtered_artifacts_url, verify=False)\n    response_json = response.json()\n    phantom.debug(response_json)\n    \n    to_delete = []\n    \n    for artifact in response_json['data']:\n        container_id = artifact['container']\n        to_delete.append(container_id)\n        endpoint = 'container/{}'.format(container_id)\n        url = base_url + endpoint\n        response = phantom.requests.delete(url, verify=False)\n        phantom.debug(\"Successfully deleted the container with {0}\".format(artifact))\n    \n    \n\n",
+                    "warnings": {},
+                    "x": 780,
+                    "y": 700
+                }
+            },
+            "notes": ""
+        },
+        "input_spec": null,
+        "output_spec": null,
+        "playbook_type": "automation",
+        "python_version": "3",
+        "schema": "5.0.10",
+        "version": "6.1.1.211"
+    },
+    "create_time": "2023-10-10T20:37:47.270641+00:00",
+    "draft_mode": false,
+    "labels": [
+        "events"
+    ],
+    "tags": []
+}
